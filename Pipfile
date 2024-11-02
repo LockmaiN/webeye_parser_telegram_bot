@@ -1,0 +1,21 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+selenium = "*"
+setuptools = "*"
+webdriver-manager = "*"
+python-dateutil = "*"
+aiogram = "*"
+python-dotenv = "*"
+pandas = "*"
+apscheduler = "*"
+geopy = "*"
+openpyxl = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.12"
