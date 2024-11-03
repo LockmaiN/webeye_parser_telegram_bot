@@ -27,6 +27,7 @@ from aiogram.fsm.context import FSMContext
 from app.states import Car_numbers
 import ast
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from apscheduler.schedulers import SchedulerAlreadyRunningError
 
 
 router = Router()
@@ -50,11 +51,16 @@ async def time_manage():
             car_time_manage_list = car_time_manage_data
 
         active_time_list = []
+        scheduler.remove_all_jobs()
         for index in range(len(car_time_manage_list)):
             active_time_list = car_time_manage_list[index].split(":")
             scheduler.add_job(send_message_info_cars_interval,
-                              trigger="cron", hour=active_time_list[0], minute=active_time_list[1], second=0, start_date=datetime.now())
-        scheduler.start()
+                              trigger="cron", hour=active_time_list[0], minute=active_time_list[1], second=0, replace_existing=True, misfire_grace_time=None, start_date=datetime.now())
+
+        try:
+            scheduler.start()
+        except SchedulerAlreadyRunningError:
+            pass
 
 
 async def send_message_info_cars_interval():
