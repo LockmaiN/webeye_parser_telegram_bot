@@ -104,6 +104,11 @@ async def send_message_info_cars_interval():
 
     time.sleep(0.5)
 
+    email_skip_but = driver.find_element(By.CSS_SELECTOR,
+                                         ".btn-skip")
+    email_skip_but.click()
+    time.sleep(3.5)
+
     cars_tracking_page = driver.find_element(By.CSS_SELECTOR,
                                              "li:nth-child(7) a:nth-child(1) div:nth-child(2) div:nth-child(1) div:nth-child(1)")
     cars_tracking_page.click()
@@ -112,16 +117,20 @@ async def send_message_info_cars_interval():
     start_button = driver.find_element(By.CSS_SELECTOR,
                                        "#submitLekerdezes_subPageButton")
     start_button.click()
-    time.sleep(10)
+    time.sleep(20)
 
     Delete_files.delete_all_the_files_in_directory(PATH)
 
     export_to_excel_button = driver.find_element(By.CSS_SELECTOR,
                                                  "#excelLetoltes_subPage")
-    export_to_excel_button.click()
-    time.sleep(20)
-    await tg_bot.send_message(int(os.getenv("TG_TEST_CHAT_ID")), f"Скоро все буде...")
-    driver.quit()
+
+    try:
+        export_to_excel_button.click()
+        time.sleep(20)
+        await tg_bot.send_message(int(os.getenv("TG_TEST_CHAT_ID")), f"Скоро все буде...")
+        driver.quit()
+    except:
+        await tg_bot.send_message(int(os.getenv("TG_TEST_CHAT_ID")), f"Схоже що ebE лежить і не може підтягнути машинки, можливо GPS або хтось інший відкинув копита, ЙО... \n\nСпробуй прописати команду /parse")
 
     csv_file = glob.glob(os.path.join(PATH, "*.xlsx"))
 
@@ -326,6 +335,11 @@ async def cmd_parse_command(message: Message):
 
         time.sleep(0.5)
 
+        email_skip_but = driver.find_element(By.CSS_SELECTOR,
+                                             ".btn-skip")
+        email_skip_but.click()
+        time.sleep(3.5)
+
         cars_tracking_page = driver.find_element(By.CSS_SELECTOR,
                                                  "li:nth-child(7) a:nth-child(1) div:nth-child(2) div:nth-child(1) div:nth-child(1)")
         cars_tracking_page.click()
@@ -334,16 +348,19 @@ async def cmd_parse_command(message: Message):
         start_button = driver.find_element(By.CSS_SELECTOR,
                                            "#submitLekerdezes_subPageButton")
         start_button.click()
-        time.sleep(10)
+        time.sleep(20)
 
         Delete_files.delete_all_the_files_in_directory(PATH)
 
         export_to_excel_button = driver.find_element(By.CSS_SELECTOR,
                                                      "#excelLetoltes_subPage")
-        export_to_excel_button.click()
-        time.sleep(20)
-        await message.answer("Завантажив ексель файл, починаю його парсити...")
-        driver.quit()
+        try:
+            export_to_excel_button.click()
+            time.sleep(20)
+            await message.answer("Завантажив ексель файл, починаю його парсити...")
+            driver.quit()
+        except:
+            await message.answer("Схоже що ebE лежить і не може підтягнути машинки, можливо GPS або хтось інший відкинув копита, ЙО... \n\nСпробуй ще раз прописати команду /parse")
 
         csv_file = glob.glob(os.path.join(PATH, "*.xlsx"))
 
